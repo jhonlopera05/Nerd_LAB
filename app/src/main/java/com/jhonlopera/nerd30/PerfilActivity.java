@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
+
 public class PerfilActivity extends AppCompatActivity {
 
     private String correoR,contraseñaR;
@@ -61,6 +63,9 @@ public class PerfilActivity extends AppCompatActivity {
                 break;
 
             case R.id.mCerrar:
+
+                //Para cerrar la sesion con facebook tambien
+                LoginManager.getInstance().logOut();
                 intent=new Intent(PerfilActivity.this,LoginActivity.class);
                 intent.putExtra("correo",correoR);
                 intent.putExtra("contraseña",contraseñaR);

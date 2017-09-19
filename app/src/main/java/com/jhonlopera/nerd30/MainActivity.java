@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
+
 public class MainActivity extends AppCompatActivity {
 
     private  String correoR,contraseñaR;
@@ -21,10 +23,16 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Lo que se envia siempre s eextrae en el metodo oncreate
-
         Bundle extras= getIntent().getExtras();
-        correoR=extras.getString("correo");
-        contraseñaR=extras.getString("contraseña");
+        if (extras != null){
+            correoR=extras.getString("correo");
+            contraseñaR =extras.getString("contraseña") ;
+
+            Context context = getApplicationContext();
+            CharSequence text = correoR+ contraseñaR;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        }
 
     }
 
@@ -58,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
 
+                //Para cerrar la sesion con facebook tambien
+                LoginManager.getInstance().logOut();
+
                 intent=new Intent(this,LoginActivity.class);
                 intent.putExtra("correo",correoR);
                 intent.putExtra("contraseña",contraseñaR);
@@ -68,4 +79,8 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
 }
+
