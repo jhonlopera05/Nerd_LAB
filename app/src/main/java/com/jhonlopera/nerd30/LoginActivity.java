@@ -142,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
             }
             @Override
             public void onCancel() {
-                Toast.makeText(getApplicationContext(),"Login cancelado",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Login  cancelado",Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onError(FacebookException error) {
