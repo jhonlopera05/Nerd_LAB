@@ -32,13 +32,13 @@ public class RegistroActivity extends AppCompatActivity {
 
     public void Registrarse(View view) {
 
-        if (TextUtils.isEmpty((ecorreo.getText().toString()))) {
+        if (TextUtils.isEmpty((enombre.getText().toString()))) {
             ecorreo.setError("Llene este espacio");
-        } else if (TextUtils.isEmpty((econtraseña.getText().toString()))) {
+        } else if (TextUtils.isEmpty((ecorreo.getText().toString()))) {
             econtraseña.setError("Llene este espacio");
-        } else if (TextUtils.isEmpty((erepcontraseña.getText().toString()))) {
+        } else if (TextUtils.isEmpty((econtraseña.getText().toString()))) {
             erepcontraseña.setError("Llene este espacio");
-        } else if (TextUtils.isEmpty((enombre.getText().toString()))) {
+        } else if (TextUtils.isEmpty((erepcontraseña.getText().toString()))) {
             enombre.setError("Llene este espacio");
         }else {
             correo = ecorreo.getText().toString();

@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
                     intent = new Intent(this, PerfilActivity.class);
                     intent.putExtra("correo",correoR);
                     intent.putExtra("nombre",nombreR);
+                    intent.putExtra("contraseña",contraseñaR);
                     intent.putExtra("log",log);
                     startActivity(intent);
                 }

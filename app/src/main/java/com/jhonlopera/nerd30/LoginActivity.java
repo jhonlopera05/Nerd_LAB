@@ -94,13 +94,13 @@ public class LoginActivity extends AppCompatActivity {
         //--------------------------------------------------------------------
 
         loginButton=(LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions("email");
+        loginButton.setReadPermissions("public_profile");
         callbackManager= CallbackManager.Factory.create();
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-
+                log="facebook";
                 GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
@@ -117,12 +117,18 @@ public class LoginActivity extends AppCompatActivity {
 
 
                             Profile profile=com.facebook.Profile.getCurrentProfile();
-                            urifoto=profile.getProfilePictureUri(400,400);
-                            log="facebook";
+                            urifoto=profile.getProfilePictureUri(400,400); //foto de tamaño 400x400
+
+                            if ((urifoto==null))
+                                foto=null;
+
+                            else
+                                foto=urifoto.toString();
+
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.putExtra("correo",correoR);
                             intent.putExtra("nombre",nombreR);
-                            intent.putExtra("foto",urifoto.toString());
+                            intent.putExtra("foto",foto);
                             intent.putExtra("log",log);
                             startActivity(intent);
                             finish();
@@ -224,11 +230,12 @@ public class LoginActivity extends AppCompatActivity {
             log="google";
 
 
-            if ((urifoto==null)){
-                foto="http://www.combonetwork.com/img/empty_profile.png";
-            }
+            if ((urifoto==null))
+                foto=null;
+
             else
                 foto=urifoto.toString();
+
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.putExtra("correo",correoR);
             intent.putExtra("nombre",nombreR);

@@ -40,27 +40,32 @@ public class PerfilActivity extends AppCompatActivity {
         imagen_perfil=(ImageView) findViewById(R.id.imagen_perfil);
 
         Bundle extras= getIntent().getExtras();
-        correoR=extras.getString("correo");
-        contraseñaR=extras.getString("contraseña");
-        foto=extras.getString("foto");
-        nombreR=extras.getString("nombre");
-        log=extras.getString("log");
+
+        if (extras!=null){
+            log=extras.getString("log");
+            if (log.equals("registro")){
+                correoR=extras.getString("correo");
+                contraseñaR=extras.getString("contraseña");
+                foto=extras.getString("foto");
+                nombreR=extras.getString("nombre");
+            }
+            else {
+                correoR=extras.getString("correo");
+                foto=extras.getString("foto");
+                nombreR=extras.getString("nombre");
+            }
+        }
 
         if (foto!=null) {
-
             loadImageFromUrl(foto);
         }
-        else{
-            foto="http://www.combonetwork.com/img/empty_profile.png";
-            loadImageFromUrl(foto);
-        }
+        else
+            Toast.makeText(getApplicationContext(),"Su cuenta no tiene foto", Toast.LENGTH_SHORT).show();
 
         if (correoR!=null)
             tvcorreo.setText("Correo: "+correoR);
 
         tvnombre.setText("Nombre: "+nombreR);
-
-
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -127,6 +132,7 @@ public class PerfilActivity extends AppCompatActivity {
                     intent = new Intent(this, MainActivity.class);
                     intent.putExtra("correo",correoR);
                     intent.putExtra("nombre",nombreR);
+                    intent.putExtra("contraseña",contraseñaR);
                     intent.putExtra("log",log);
                     startActivity(intent);
                 }
