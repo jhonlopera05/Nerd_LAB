@@ -106,6 +106,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         if (response.getError() != null) {
 
+
                         } else {
                             try {
                                 nombreR = object.getString("name");
