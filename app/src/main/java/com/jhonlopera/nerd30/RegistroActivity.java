@@ -2,6 +2,7 @@ package com.jhonlopera.nerd30;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,12 +19,19 @@ public class RegistroActivity extends AppCompatActivity {
     private String correo, contraseña, repcontraseña,nombre;
     private EditText ecorreo, econtraseña, erepcontraseña,enombre;
     int duration = Toast.LENGTH_SHORT;
+    SharedPreferences preferencias;
+    SharedPreferences.Editor editor_preferencias;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
+
+        // Se define el archivo "Preferencias" donde se almacenaran los valores de las preferencias
+        preferencias=getSharedPreferences("Preferencias", Context.MODE_PRIVATE);
+        //se declara instancia el editor de "Preferencias"
+        editor_preferencias=preferencias.edit();
 
 
         ecorreo = (EditText) findViewById(R.id.eCorreo);
@@ -51,10 +59,8 @@ public class RegistroActivity extends AppCompatActivity {
 
             if(isEmailValid(correo)){
                 if (contraseña.equals(repcontraseña)) {
+                    guardarPreferencias(correo,nombre,contraseña);
                     Intent intent = new Intent();
-                    intent.putExtra("correo", correo);
-                    intent.putExtra("contraseña", contraseña);
-                    intent.putExtra("nombre",nombre);
                     setResult(RESULT_OK, intent);
                     finish();
                 } else {
@@ -87,5 +93,12 @@ public class RegistroActivity extends AppCompatActivity {
             isValid = false;
         }
         return isValid;
+    }
+    void guardarPreferencias(String correo,String nombre,String contraseña){
+
+        editor_preferencias.putString("correo",correo);
+        editor_preferencias.putString("nombre",nombre);
+        editor_preferencias.putString("contraseña",contraseña);
+        editor_preferencias.commit();
     }
 }

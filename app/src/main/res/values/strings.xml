@@ -10,4 +10,5 @@
     <string name="facebook_app_id">117185448956313</string>
     <string name="fb_login_protocol_scheme">fb117185448956313</string>
     <string name="nombre">Nombre</string>
+    <string name="banner">Bienvenido a Nerd 3.0</string>
 </resources>

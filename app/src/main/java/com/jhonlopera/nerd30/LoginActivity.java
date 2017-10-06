@@ -2,6 +2,7 @@ package com.jhonlopera.nerd30;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -46,40 +47,30 @@ import java.util.List;
 
 
 public class LoginActivity extends AppCompatActivity {
-    private String correoR,contraseñaR, correo, contraseña,nombreR,foto;
+    private String correoR,contraseñaR, correo, contraseña,nombreR,foto,log,prueba;
     private Uri urifoto;
     private EditText ecorreo, econtraseña;
     int duration = Toast.LENGTH_SHORT;
     private LoginButton loginButton;
     private CallbackManager callbackManager;
-    String log;
     GoogleApiClient mGoogleApiClient;
     private int RC_SIGN_IN =1035;
-
+    SharedPreferences preferencias;
+    SharedPreferences.Editor editor_preferencias;
+    int silog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         AppEventsLogger.activateApp(LoginActivity.this);
-
         ecorreo = (EditText) findViewById(R.id.eCorreo);
         econtraseña = (EditText) findViewById(R.id.eContraseña);
 
-        //-------------------------------------------------------------------------------
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.jhonlopera.nerd30",
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {}
-        //------------------------------------------------------------------------------
+        // Se define el archivo "Preferencias" donde se almacenaran los valores de las preferencias
+        preferencias=getSharedPreferences("Preferencias", Context.MODE_PRIVATE);
+        //se declara instancia el editor de "Preferencias"
+        editor_preferencias=preferencias.edit();
 
         //-------------------------------------------------------
         //Si el logggin es con el registro de usuario
@@ -94,13 +85,14 @@ public class LoginActivity extends AppCompatActivity {
         //--------------------------------------------------------------------
 
         loginButton=(LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions("public_profile");
+        loginButton.setReadPermissions("public_profile"); //Permisos del perfil publico
         callbackManager= CallbackManager.Factory.create();
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 log="facebook";
+                silog=1;
                 GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
@@ -122,10 +114,12 @@ public class LoginActivity extends AppCompatActivity {
 
                             if ((urifoto==null))
                                 foto=null;
-
                             else
                                 foto=urifoto.toString();
 
+                            guardarPreferencias(silog,correoR,nombreR,foto,log);
+                            prueba=preferencias.getString("nombre","noseobtuvo");
+                            Toast.makeText(getApplicationContext(),prueba, Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.putExtra("correo",correoR);
                             intent.putExtra("nombre",nombreR);
@@ -152,22 +146,15 @@ public class LoginActivity extends AppCompatActivity {
 
         //Para loggin con google
         //-------------------------------------------------------------------------------------------
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestProfile()
-                //.requestIdToken(getString(R.string.default_web_client_id))
-                .build();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
+                .requestProfile().build();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
             @Override
             public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
                 Toast.makeText(getApplicationContext(),"Error en el loggin",Toast.LENGTH_SHORT);
             }
-        })
-
-                //le pasamos lo que se le solicia a google (en este caso el acceso)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
+        }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
 
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
@@ -185,13 +172,15 @@ public class LoginActivity extends AppCompatActivity {
         correo = ecorreo.getText().toString();
         contraseña = econtraseña.getText().toString();
         log="registro";
+        silog=1;
+        contraseñaR=preferencias.getString("contraseña","/((&!=");
+        correoR=preferencias.getString("correo","/(/%#%//(%#");
 
         if(correo.equals(correoR) && contraseña.equals(contraseñaR)){
+            editor_preferencias.putInt("silog",silog);
+            editor_preferencias.putString("log",log);
+            editor_preferencias.commit();
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            intent.putExtra("correo",correoR);
-            intent.putExtra("contraseña",contraseñaR);
-            intent.putExtra("nombre",nombreR);
-            intent.putExtra("log",log);
             startActivity(intent);
             finish();
         }
@@ -206,29 +195,35 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode==1234 && resultCode==RESULT_OK){ //registro
-            correoR=data.getExtras().getString("correo");
-            contraseñaR=data.getExtras().getString("contraseña");
-            nombreR=data.getExtras().getString("nombre");
+        if (requestCode==1234 && resultCode==RESULT_OK){
+            //registro
+            prueba=preferencias.getString("nombre","no se obtuvo");
+            Toast.makeText(getApplicationContext(),prueba, Toast.LENGTH_SHORT).show();
+            correoR=preferencias.getString("correo","no se obtivo");
+            contraseñaR=preferencias.getString("contraseña","no se obtivo");
+            nombreR=preferencias.getString("nombre","no se obtivo");
         }
 
         else if (requestCode == RC_SIGN_IN) {//login con google
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
-        else {//facebook
+        else {
+            //facebook
             callbackManager.onActivityResult(requestCode,resultCode,data);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
+        //google
         if (result.isSuccess()) {
             GoogleSignInAccount acct = result.getSignInAccount();
             correoR=acct.getEmail();//obtener email
             nombreR=acct.getDisplayName();
             urifoto=acct.getPhotoUrl();
             log="google";
+            silog=1;
 
 
             if ((urifoto==null))
@@ -237,11 +232,10 @@ public class LoginActivity extends AppCompatActivity {
             else
                 foto=urifoto.toString();
 
+            guardarPreferencias(silog,correoR,nombreR,foto,log);
+            prueba=preferencias.getString("nombre","noseobtuvo");
+            Toast.makeText(getApplicationContext(),prueba, Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            intent.putExtra("correo",correoR);
-            intent.putExtra("nombre",nombreR);
-            intent.putExtra("foto",foto);
-            intent.putExtra("log",log);
             startActivity(intent);
             finish();
 
@@ -259,6 +253,32 @@ public class LoginActivity extends AppCompatActivity {
 
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    public void generarHash(){
+
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.jhonlopera.nerd30",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {}
+
+    }
+
+    void guardarPreferencias(int silog,String correo,String nombre, String foto,String log){
+        editor_preferencias.putInt("silog",silog);
+        editor_preferencias.putString("correo",correo);
+        editor_preferencias.putString("nombre",nombre);
+        editor_preferencias.putString("foto",foto);
+        editor_preferencias.putString("log",log);
+        editor_preferencias.commit();
     }
 
 
