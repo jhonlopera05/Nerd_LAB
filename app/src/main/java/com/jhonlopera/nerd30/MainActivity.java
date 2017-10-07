@@ -9,6 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,25 +23,27 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private  String correoR,contraseñaR,nombreR,log,foto,fotoR;
     private Uri urifoto;
     int duration = Toast.LENGTH_SHORT;
+  private ImageButton puntaje;
     GoogleApiClient mGoogleApiClient;
     SharedPreferences preferencias;
     SharedPreferences.Editor editor_preferencias;
     int silog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         preferencias=getSharedPreferences("Preferencias", Context.MODE_PRIVATE);
         editor_preferencias=preferencias.edit();
-
+        puntaje=(ImageButton) findViewById(R.id.bpuntaje);
+        puntaje.setOnClickListener(this);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -128,5 +133,13 @@ public class MainActivity extends AppCompatActivity {
                         toast.show();
                     }
                 });
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v==puntaje) {
+            Intent intent = new Intent(this, CreditosActivity.class);
+            startActivity(intent);
+        }
     }
 }

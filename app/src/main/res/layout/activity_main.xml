@@ -68,7 +68,8 @@
             android:layout_height="110dp"
             android:layout_gravity="center"
             android:layout_marginBottom="5dp"
-            android:background="@drawable/puntajes2" />
+            android:background="@drawable/puntajes2"
+            android:id="@+id/bpuntaje"/>
 
 
     </LinearLayout>
