@@ -62,8 +62,6 @@ public class PerfilActivity extends AppCompatActivity {
         }
 
 
-
-
         if (foto!=null) {
             loadImageFromUrl(foto);
         }
@@ -92,8 +90,7 @@ public class PerfilActivity extends AppCompatActivity {
     }
 
     private void loadImageFromUrl(String foto) {
-        Picasso.with(this).load(foto).placeholder(R.mipmap.ic_launcher)
-                .into(imagen_perfil, new com.squareup.picasso.Callback(){
+        Picasso.with(this).load(foto).placeholder(R.mipmap.ic_launcher).into(imagen_perfil, new com.squareup.picasso.Callback(){
                     @Override
                     public void onSuccess() {
                     }

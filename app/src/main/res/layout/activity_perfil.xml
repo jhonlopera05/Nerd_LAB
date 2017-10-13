@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.jhonlopera.nerd30.PerfilActivity"
     android:orientation="vertical"
-    android:background="@drawable/fondo">
+    android:background="@drawable/fondito">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
         <ImageView
             android:layout_width="400px"
             android:layout_height="400px"
-            android:src="@drawable/fotos"
+            android:src="@drawable/perfil5"
             android:layout_margin="10dp"
             android:id="@+id/imagen_perfil"/>
     </LinearLayout>

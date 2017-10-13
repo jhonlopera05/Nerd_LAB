@@ -15,10 +15,7 @@
             android:value="@string/facebook_app_id" />
 
         <activity android:name=".SplashActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity
             android:name=".LoginActivity"
@@ -31,8 +28,16 @@
         <activity
             android:name=".CreditosActivity"
             android:label="@string/title_activity_creditos"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".PrincipalActivity"
+            android:label="@string/title_activity_principal"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

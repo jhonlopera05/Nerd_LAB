@@ -138,8 +138,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v==puntaje) {
+
             Intent intent = new Intent(this, CreditosActivity.class);
             startActivity(intent);
+
         }
     }
 }

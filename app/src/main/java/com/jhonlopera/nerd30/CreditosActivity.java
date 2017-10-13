@@ -33,6 +33,7 @@ public class CreditosActivity extends AppCompatActivity {
         toolbar.setTitle("Puntajes");
 
         setSupportActionBar(toolbar);
+
 */
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 

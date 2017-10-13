@@ -20,4 +20,8 @@
     <string name="aplasta">Aplasta al topo</string>
     <string name="cpl4">4 palabras 1 letra</string>
     <string name="ct">Concéntrese</string>
+    <string name="title_activity_principal">PrincipalActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>
