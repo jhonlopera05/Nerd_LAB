@@ -120,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                             guardarPreferencias(silog,correoR,nombreR,foto,log);
                             prueba=preferencias.getString("nombre","noseobtuvo");
                             Toast.makeText(getApplicationContext(),prueba, Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, PrincipalActivity.class);
                             intent.putExtra("correo",correoR);
                             intent.putExtra("nombre",nombreR);
                             intent.putExtra("foto",foto);
@@ -180,7 +180,7 @@ public class LoginActivity extends AppCompatActivity {
             editor_preferencias.putInt("silog",silog);
             editor_preferencias.putString("log",log);
             editor_preferencias.commit();
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            Intent intent = new Intent(LoginActivity.this,PrincipalActivity.class);
             startActivity(intent);
             finish();
         }
@@ -235,7 +235,7 @@ public class LoginActivity extends AppCompatActivity {
             guardarPreferencias(silog,correoR,nombreR,foto,log);
             prueba=preferencias.getString("nombre","noseobtuvo");
             Toast.makeText(getApplicationContext(),prueba, Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            Intent intent = new Intent(LoginActivity.this, PrincipalActivity.class);
             startActivity(intent);
             finish();
 

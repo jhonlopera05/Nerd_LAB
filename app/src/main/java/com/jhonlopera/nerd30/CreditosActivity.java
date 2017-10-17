@@ -34,7 +34,7 @@ public class CreditosActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-*/
+    */
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
 

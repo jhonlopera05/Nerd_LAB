@@ -28,7 +28,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private  String correoR,contraseñaR,nombreR,log,foto,fotoR;
     private Uri urifoto;
     int duration = Toast.LENGTH_SHORT;
-  private ImageButton puntaje;
+
+    private ImageButton puntaje;
     GoogleApiClient mGoogleApiClient;
     SharedPreferences preferencias;
     SharedPreferences.Editor editor_preferencias;
@@ -44,12 +45,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editor_preferencias=preferencias.edit();
         puntaje=(ImageButton) findViewById(R.id.bpuntaje);
         puntaje.setOnClickListener(this);
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener(){
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener(){
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
                         Toast.makeText(getApplicationContext(),"error", Toast.LENGTH_SHORT).show();

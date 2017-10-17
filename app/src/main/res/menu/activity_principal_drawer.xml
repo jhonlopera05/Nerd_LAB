@@ -15,13 +15,26 @@
             android:id="@+id/nav_config"
             android:icon="@drawable/ic_menu_manage"
             android:title="Configuraciones" />
-        <item
-            android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_menu_profile"
-            android:title="Perfil" />
+
+
+>
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Otros">
+        <menu>
+            <item
+                android:id="@+id/nav_profile"
+                android:icon="@drawable/ic_menu_profile"
+                android:title="Perfil" />
+            <item
+                android:id="@+id/nav_cerrarsesion"
+                android:icon="@drawable/ic_menu_profile"
+                android:title="Cerrar sesion" />
+        </menu>
+    </item>
+
+
+    <item android:title="Juegos">
         <menu>
             <item
                 android:id="@+id/nav_4imagenes"
