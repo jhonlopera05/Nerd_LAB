@@ -1,5 +1,7 @@
 package com.jhonlopera.nerd30;
 
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,9 +19,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
-public class CreditosActivity extends AppCompatActivity {
+public class CreditosActivity extends PrincipalActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -27,14 +30,14 @@ public class CreditosActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_creditos);
+        //setContentView(R.layout.activity_creditos);
 
-        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Puntajes");
+        FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.frameprincipal);
+        getLayoutInflater().inflate(R.layout.activity_creditos, contentFrameLayout);
 
-        setSupportActionBar(toolbar);
+        ft.remove(fragment1); //se remueve el fragment que se inicia por defecto en el oncreate de principal
+        getSupportActionBar().setTitle("Puntajes");
 
-    */
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
 
@@ -45,14 +48,6 @@ public class CreditosActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
     }
 
-/* Crear menu de desborde
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_creditos, menu);
-        return true;
-    }
-*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();

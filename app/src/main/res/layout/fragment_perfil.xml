@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context="com.jhonlopera.nerd30.PerfilFragment"
     android:orientation="vertical"
-    android:background="@drawable/fondito">
+    android:background="@drawable/fondo1234">
 
 
     <LinearLayout
@@ -39,6 +39,7 @@
                 android:text="nombre jugador apellido "
                 android:textColor="@color/whitesmoke"
                 android:textSize="26sp"
+                android:gravity="center"
                 android:textStyle="bold" />
 
             <TextView
@@ -46,6 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
+                android:gravity="center"
                 android:text="jugador1@correo.algo"
                 android:textColor="@color/whitesmoke"
                 android:textSize="26sp"

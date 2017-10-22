@@ -49,6 +49,7 @@ public class PrincipalActivity extends AppCompatActivity
     SharedPreferences preferencias;
     SharedPreferences.Editor editor_preferencias;
     int silog;
+    Fragment fragment1 ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,9 +90,10 @@ public class PrincipalActivity extends AppCompatActivity
         fm = getSupportFragmentManager();
         ft = fm.beginTransaction();
 
-        Fragment fragment = new MenuPrincipalFragment();
+        fragment1= new MenuPrincipalFragment();
         getSupportActionBar().setTitle("Menu principal");
-        ft.add(R.id.main_content, fragment).commit();
+        ft.add(R.id.frameprincipal, fragment1).commit();
+
     }
 
     @Override
@@ -99,6 +101,7 @@ public class PrincipalActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+
         } else {
             super.onBackPressed();
         }
@@ -147,8 +150,9 @@ public class PrincipalActivity extends AppCompatActivity
             ft.addToBackStack("correo");
             ft.addToBackStack("foto");
             getSupportActionBar().setTitle(item.getTitle());
-            ft.replace(R.id.main_content, fragment).commit();
+            ft.replace(R.id.frameprincipal, fragment).commit();
             FragmentTransaction = false;
+
 
         } else if (id == R.id.nav_ranking) {
 
@@ -200,7 +204,7 @@ public class PrincipalActivity extends AppCompatActivity
 
         if(FragmentTransaction){
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.main_content,fragment)
+                    .replace(R.id.frameprincipal,fragment)
                     .commit();
 
             item.setChecked(true);

@@ -77,7 +77,9 @@ public class PerfilFragment extends Fragment{
     }
 
     private void loadImageFromUrl(String foto) {
-        Glide.with(getActivity()).load(foto).transform(new CircleTransform(getActivity())).into(imagen_perfil);
+        Glide.with(getActivity()).load(foto).transform(new CircleTransform(getContext())).into(imagen_perfil);
 
     }
+
+
 }
