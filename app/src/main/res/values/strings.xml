@@ -29,5 +29,6 @@
     <string name="Instrucciones4im">El objetivo de este juego es encontrar una palabra que relacione las 4 imágenes que se muestran. ¡Pero no es tan sencillo! Tu única pista es el número de letras que tenga la palabra\n.</string>
     <string name="cuatroIM">4 imágenes 1 palabra</string>
     <string name="Concentrese">Concéntrese</string>
+    <string name="Tiempo">Tiempo: </string>
 
 </resources>
