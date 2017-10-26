@@ -59,22 +59,24 @@
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:layout_margin="5dp"
-                android:background="@drawable/boton1" />
+                android:background="@drawable/boton1"
+                android:id="@+id/b4imagenes"/>
 
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="@drawable/boton2" />
+                android:background="@drawable/boton2"
+                android:id="@+id/bconcentrese"/>
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="@drawable/boton3" />
+                android:background="@drawable/boton3"
+                android:id="@+id/btopo"/>
 
         </LinearLayout>
 

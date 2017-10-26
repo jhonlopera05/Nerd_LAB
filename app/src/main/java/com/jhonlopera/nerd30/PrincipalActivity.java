@@ -33,7 +33,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
 public class PrincipalActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OpenInterface{
 
     FragmentManager fm;
     FragmentTransaction ft;
@@ -234,6 +234,33 @@ public class PrincipalActivity extends AppCompatActivity
                 Toast.makeText(getApplicationContext(),"error", Toast.LENGTH_SHORT).show();
             }
         }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+    }
+
+    @Override
+    public void OpenCuatroImagenesMenu() {
+
+        Fragment fragment=new Menu4imagenesFragment();
+        ft = fm.beginTransaction();
+        ft.replace(R.id.frameprincipal, fragment).commit();
+        getSupportActionBar().setTitle("Asociación");
+
+    }
+
+    @Override
+    public void OpenConcentreseMenu() {
+        Fragment fragment=new MenuConcentreseFragment();
+        ft = fm.beginTransaction();
+        ft.replace(R.id.frameprincipal, fragment).commit();
+        getSupportActionBar().setTitle("Concentración");
+    }
+
+    @Override
+    public void OpenTopoMenu() {
+        Fragment fragment=new MenuTopoFragment();
+        ft = fm.beginTransaction();
+        ft.replace(R.id.frameprincipal, fragment).commit();
+        getSupportActionBar().setTitle("Velocidad de reacción ");
+
     }
 }
 
