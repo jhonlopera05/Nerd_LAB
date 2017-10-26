@@ -43,7 +43,7 @@
             <item
                 android:id="@+id/nav_concentrese"
                 android:icon="@drawable/ic_menu_play"
-                android:title="concebtrese" />
+                android:title="Concéntrese" />
             <item
                 android:id="@+id/nav_aplasta"
                 android:icon="@drawable/ic_menu_play"

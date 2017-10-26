@@ -43,6 +43,7 @@ public class RegistroActivity extends AppCompatActivity {
 
     public void Registrarse(View view) {
 
+
         if (TextUtils.isEmpty((enombre.getText().toString()))) {
             ecorreo.setError("Llene este espacio");
         } else if (TextUtils.isEmpty((ecorreo.getText().toString()))) {
