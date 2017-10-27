@@ -262,5 +262,12 @@ public class PrincipalActivity extends AppCompatActivity
         getSupportActionBar().setTitle("Velocidad de reacción ");
 
     }
+
+    @Override
+    public void OpenCuantroImagenes() {
+        Intent intent=new Intent(this,CuatroImagenesActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }
 

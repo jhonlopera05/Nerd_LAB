@@ -9,4 +9,5 @@ public interface OpenInterface {
     void OpenCuatroImagenesMenu();
     void OpenConcentreseMenu();
     void OpenTopoMenu();
+    void OpenCuantroImagenes();
 }
