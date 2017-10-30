@@ -8,11 +8,13 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,18 +28,21 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 
 
-public class PerfilFragment extends Fragment{
+public class PerfilFragment extends Fragment implements View.OnClickListener {
 
     private String correoR,nombreR, foto;
 
     private TextView tvcorreo,tvnombre;
     private ImageView imagen_perfil;
-
-
+    ImageButton nada;
+    private  int counter=1;
+    SharedPreferences preferencias;
+    SharedPreferences.Editor editor_preferencias;
 
     public PerfilFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,10 +54,13 @@ public class PerfilFragment extends Fragment{
         foto=bundle.getString("foto");
 
 
+
         View view= inflater.inflate(R.layout.fragment_perfil, container, false);
         tvcorreo=(TextView) view.findViewById(R.id.tvfcorreo);
         tvnombre=(TextView) view.findViewById(R.id.tvfnombre);
         imagen_perfil=(ImageView) view.findViewById(R.id.imagen_perfilf);
+        nada=(ImageButton) view.findViewById(R.id.imageButtonNada);
+        nada.setOnClickListener(this);
         cambiarnombres(nombreR,correoR);
 
         if (foto!=null){
@@ -82,4 +90,34 @@ public class PerfilFragment extends Fragment{
     }
 
 
+    @Override
+    public void onClick(View v) {
+        if (v==nada){
+            mensajemolestar(counter);
+            counter++;
+
+        }
+    }
+
+    private void mensajemolestar(int counter) {
+        if(counter==1){
+            Toast.makeText(getActivity(),"Enserio, aqui no hay nada",Toast.LENGTH_LONG).show();
+        }
+        else if(counter==2){
+            Toast.makeText(getActivity(),"¿De nuevo?",Toast.LENGTH_LONG).show();
+        }
+        else if(counter==3){
+            Toast.makeText(getActivity(),"Insisto, ¡aqui no hay nada!",Toast.LENGTH_LONG).show();
+        }
+        else if(counter==4){
+            Toast.makeText(getActivity(),"¿Enserio?, ¿tu de nuevo?",Toast.LENGTH_LONG).show();
+        }
+        else if(counter==5){
+            Toast.makeText(getActivity(),"¡YA!, deja el boton en paz",Toast.LENGTH_LONG).show();
+        }
+        else if(counter==6){
+            Toast.makeText(getActivity(),"¿No te cansas?",Toast.LENGTH_LONG).show();
+        }
+
+    }
 }

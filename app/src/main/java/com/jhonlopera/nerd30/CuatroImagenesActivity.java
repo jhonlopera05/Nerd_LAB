@@ -2,6 +2,7 @@ package com.jhonlopera.nerd30;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Layout;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,6 +31,13 @@ public class CuatroImagenesActivity extends AppCompatActivity implements View.On
     int casillanumero=0;
     final Button botones[]=new Button[10];
     final  TextView letras[] =new TextView[7];
+    TextView score;
+
+    String palabra;
+    String palabracorrecta="";
+    long puntaje=0;
+    long puntajeaux=0;
+    long p;
 
 
     @Override
@@ -38,6 +47,13 @@ public class CuatroImagenesActivity extends AppCompatActivity implements View.On
 
         preferencias=getSharedPreferences("Preferencias", Context.MODE_PRIVATE);
         editor_preferencias=preferencias.edit();
+
+
+        tiempo=(Chronometer) findViewById(R.id.tiempo);
+        score=(TextView) findViewById(R.id.tscore);
+        puntaje=preferencias.getLong("puntaje",1);
+        //puntaje=0;
+        score.setText("Score: "+ String.valueOf(puntaje));
 
         //Casillas de las letras
         letras[0]=(TextView) findViewById(R.id.tletra1);
@@ -67,6 +83,12 @@ public class CuatroImagenesActivity extends AppCompatActivity implements View.On
         bavanzar=(Button) findViewById(R.id.bavanzar);
         bdel=(Button) findViewById(R.id.bdel);
 
+        level=preferencias.getInt("level",1);
+        //level=1;
+        palabra=cargarnivel(level);
+
+        tiempo.start();
+
         bavanzar.setOnClickListener(this);
         bdel.setOnClickListener(this);
 
@@ -74,8 +96,8 @@ public class CuatroImagenesActivity extends AppCompatActivity implements View.On
             botones[i].setOnClickListener(this);
         }
 
-        level=preferencias.getInt("level",1);
-        cargarnivel(level);
+
+
 
     }
 
@@ -83,25 +105,100 @@ public class CuatroImagenesActivity extends AppCompatActivity implements View.On
     public void onClick(View v) {
 
         if(v==bavanzar){
-            level++;
-            editor_preferencias.putInt("level",level).commit();
-            cargarnivel(level);
+            for (int i=0;i<palabra.length();i++){
+                palabracorrecta+=letras[i].getText();
+            }
+            if(palabracorrecta.equals(palabra)){
 
-            if (level==5){
-                level=0;
+                puntajeaux=SystemClock.elapsedRealtime()-tiempo.getBase();
+                puntajeaux=(puntajeaux/1000);
+
+                if (puntajeaux<10){
+                    puntaje+=100*level;
+                }
+                else{
+                    p=100*level;
+                    for(int n=10;n<puntajeaux;n++){
+                        p=p-(n-5);
+
+                        if(p<=10){
+                            break;
+                        }
+                    }
+                    puntaje+=p;
+                }
+
+
+                editor_preferencias.putLong("puntaje",puntaje).commit();
+                score.setText("Score: "+String.valueOf(puntaje));
+                Toast.makeText(this,"GOOD!",Toast.LENGTH_SHORT).show();
+
+                for (int k=0;k<palabra.length();k++){
+                    letras[k].setText("");
+                }
+
+                for (int j=0;j<10;j++){
+                    botones[j].setVisibility(View.VISIBLE);
+                }
+
+                if (level==5){
+                    level=1;
+                    puntaje=0;
+                    editor_preferencias.putInt("level",level).commit();
+                    editor_preferencias.putLong("puntaje",puntaje).commit();
+                    score.setText("Score: " +puntaje);
+                }else{
+                    level++;
+                }
+
                 editor_preferencias.putInt("level",level).commit();
+                palabra=cargarnivel(level);
+                palabracorrecta="";
+                casillanumero=0;
+                tiempo.setBase(SystemClock.elapsedRealtime());
+            }else{
+                Toast.makeText(this,"Error",Toast.LENGTH_LONG).show();
+            }
+
+        }
+        else if(v==bdel){
+
+            casillanumero=0;
+            palabracorrecta="";
+
+            for (int i=0;i<10;i++){
+                botones[i].setVisibility(View.VISIBLE);
+            }
+
+            for (int j=0;j<palabra.length();j++){
+                letras[j].setText("");
+            }
+
+
+        }
+        else {
+
+            for (int i=0;i<10;i++){
+
+                if(casillanumero<7){
+                    if(v==botones[i]){
+                        letras[casillanumero].setText(botones[i].getText());
+                        botones[i].setVisibility(View.INVISIBLE);
+                        casillanumero++;
+                    }
+                }
+
+
             }
         }
     }
 
-    private void cargarnivel(int level) {
+    private String cargarnivel(int level) {
 
-        String palabra;
+        String palabra="";
         switch(level){
             case 1:
-
                 palabra="ROJO";
-
                 cambiarletras(palabra);
                 Linear5=(LinearLayout) findViewById(R.id.linear5);
                 Linear5.setVisibility(View.GONE);
@@ -127,10 +224,6 @@ public class CuatroImagenesActivity extends AppCompatActivity implements View.On
                 Linear6.setVisibility(View.GONE);
                 Linear7=(LinearLayout) findViewById(R.id.linear7);
                 Linear7.setVisibility(View.GONE);
-
-
-
-
 
                 im1.setImageDrawable(getResources().getDrawable(R.drawable.nivel2_1));
                 im2.setImageDrawable(getResources().getDrawable(R.drawable.nivel2_2));
@@ -189,12 +282,10 @@ public class CuatroImagenesActivity extends AppCompatActivity implements View.On
                 im2.setImageDrawable(getResources().getDrawable(R.drawable.nivel5_2));
                 im3.setImageDrawable(getResources().getDrawable(R.drawable.nivel5_3));
                 im4.setImageDrawable(getResources().getDrawable(R.drawable.nivel5_4));
-
-
                 break;
         }
 
-
+        return palabra;
 
     }
 
@@ -214,8 +305,8 @@ public class CuatroImagenesActivity extends AppCompatActivity implements View.On
 
     private String aleatorio(){
         //Colocar letras aleatorias
-        int num1 = 97;
-        int num2 = 122;
+        int num1 = 65;
+        int num2 = 90;
         int numAleatorio = (int)Math.floor(Math.random()*(num2 -num1)+num1);
         char letra=(char)numAleatorio;
         return String.valueOf(letra);
