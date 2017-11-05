@@ -7,25 +7,22 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
@@ -35,29 +32,41 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 public class LoginActivity extends AppCompatActivity {
-    private String correoR,contraseñaR, correo, contraseña,nombreR,foto,log,prueba;
+    private String correoR, contraseñaR, correo, contraseña, nombreR, foto, log, prueba,id;
+    int numerousuario;
+    int numerito;
     private Uri urifoto;
     private EditText ecorreo, econtraseña;
     int duration = Toast.LENGTH_SHORT;
     private LoginButton loginButton;
     private CallbackManager callbackManager;
     GoogleApiClient mGoogleApiClient;
-    private int RC_SIGN_IN =1035;
+    private int RC_SIGN_IN = 1035;
     SharedPreferences preferencias;
     SharedPreferences.Editor editor_preferencias;
-    int silog;
+    int silog,contador4imagenes;
+    Jugador jugador;
+
+    //Para trabajar con firebase
+    DatabaseReference myRef;
+    FirebaseDatabase database;
+    ValueEventListener listener;
+    long punaje4imagenes;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,15 +76,17 @@ public class LoginActivity extends AppCompatActivity {
         ecorreo = (EditText) findViewById(R.id.eCorreo);
         econtraseña = (EditText) findViewById(R.id.eContraseña);
 
+
         // Se define el archivo "Preferencias" donde se almacenaran los valores de las preferencias
-        preferencias=getSharedPreferences("Preferencias", Context.MODE_PRIVATE);
+        preferencias = getSharedPreferences("Preferencias", Context.MODE_PRIVATE);
         //se declara instancia el editor de "Preferencias"
-        editor_preferencias=preferencias.edit();
+        editor_preferencias = preferencias.edit();
+        punaje4imagenes = preferencias.getLong("puntaje4imagenes",0);
 
         //-------------------------------------------------------
         //Si el logggin es con el registro de usuario
-        Bundle extras= getIntent().getExtras();
-        if (extras != null){
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
 
             correoR = extras.getString("correo");
             contraseñaR = extras.getString("contraseña");
@@ -84,15 +95,15 @@ public class LoginActivity extends AppCompatActivity {
         }
         //--------------------------------------------------------------------
 
-        loginButton=(LoginButton) findViewById(R.id.login_button);
+        loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions("public_profile"); //Permisos del perfil publico
-        callbackManager= CallbackManager.Factory.create();
+        callbackManager = CallbackManager.Factory.create();
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                log="facebook";
-                silog=1;
+                log = "facebook";
+                silog = 1;
                 GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
@@ -104,27 +115,27 @@ public class LoginActivity extends AppCompatActivity {
                                 nombreR = object.getString("name");
                                 correoR = object.getString("email");
 
-                            }catch (JSONException e) {
+                            } catch (JSONException e) {
                                 e.printStackTrace();
                             }
 
 
-                            Profile profile=com.facebook.Profile.getCurrentProfile();
-                            urifoto=profile.getProfilePictureUri(400,400); //foto de tamaño 400x400
+                            Profile profile = com.facebook.Profile.getCurrentProfile();
+                            urifoto = profile.getProfilePictureUri(400, 400); //foto de tamaño 400x400
 
-                            if ((urifoto==null))
-                                foto=null;
+                            if ((urifoto == null))
+                                foto = null;
                             else
-                                foto=urifoto.toString();
+                                foto = urifoto.toString();
 
-                            guardarPreferencias(silog,correoR,nombreR,foto,log);
-                            prueba=preferencias.getString("nombre","noseobtuvo");
-                            Toast.makeText(getApplicationContext(),prueba, Toast.LENGTH_SHORT).show();
+                            guardarPreferencias(silog, correoR, nombreR, foto, log);
+                            //prueba = preferencias.getString("nombre", "noseobtuvo");
+                           // Toast.makeText(getApplicationContext(), prueba, Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(LoginActivity.this, PrincipalActivity.class);
-                            intent.putExtra("correo",correoR);
-                            intent.putExtra("nombre",nombreR);
-                            intent.putExtra("foto",foto);
-                            intent.putExtra("log",log);
+                            //intent.putExtra("correo", correoR);
+                            //intent.putExtra("nombre", nombreR);
+                            //intent.putExtra("foto", foto);
+                            //intent.putExtra("log", log);
                             startActivity(intent);
                             finish();
                         }
@@ -135,14 +146,17 @@ public class LoginActivity extends AppCompatActivity {
                 request.setParameters(parameters);
                 request.executeAsync();
             }
+
             @Override
             public void onCancel() {
-                Toast.makeText(getApplicationContext(),"Login  cancelado",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Login  cancelado", Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(getApplicationContext(),"Error en el login",Toast.LENGTH_SHORT).show();
-            }});
+                Toast.makeText(getApplicationContext(), "Error en el login", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         //Para loggin con google
         //-------------------------------------------------------------------------------------------
@@ -152,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
         mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
             @Override
             public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                Toast.makeText(getApplicationContext(),"Error en el loggin",Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(), "Error en el loggin", Toast.LENGTH_SHORT);
             }
         }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
 
@@ -163,7 +177,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 signIn();
-            }});
+            }
+        });
         //-------------------------------------------------------------------------------------------
     }
 
@@ -171,20 +186,19 @@ public class LoginActivity extends AppCompatActivity {
 
         correo = ecorreo.getText().toString();
         contraseña = econtraseña.getText().toString();
-        log="registro";
-        silog=1;
-        contraseñaR=preferencias.getString("contraseña","/((&!=");
-        correoR=preferencias.getString("correo","/(/%#%//(%#");
+        log = "registro";
+        silog = 1;
+        contraseñaR = preferencias.getString("contraseña", "/((&!=");
+        correoR = preferencias.getString("correo", "/(/%#%//(%#");
 
-        if(correo.equals(correoR) && contraseña.equals(contraseñaR)){
-            editor_preferencias.putInt("silog",silog);
-            editor_preferencias.putString("log",log);
+        if (correo.equals(correoR) && contraseña.equals(contraseñaR)) {
+            editor_preferencias.putInt("silog", silog);
+            editor_preferencias.putString("log", log);
             editor_preferencias.commit();
-            Intent intent = new Intent(LoginActivity.this,PrincipalActivity.class);
+            Intent intent = new Intent(LoginActivity.this, PrincipalActivity.class);
             startActivity(intent);
             finish();
-        }
-        else{
+        } else {
             Context context = getApplicationContext();
             CharSequence text = "Datos incorrectos";
             Toast toast = Toast.makeText(context, text, duration);
@@ -195,22 +209,19 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode==1234 && resultCode==RESULT_OK){
+        if (requestCode == 1234 && resultCode == RESULT_OK) {
             //registro
-            prueba=preferencias.getString("nombre","no se obtuvo");
-            Toast.makeText(getApplicationContext(),prueba, Toast.LENGTH_SHORT).show();
-            correoR=preferencias.getString("correo","no se obtivo");
-            contraseñaR=preferencias.getString("contraseña","no se obtivo");
-            nombreR=preferencias.getString("nombre","no se obtivo");
-        }
-
-        else if (requestCode == RC_SIGN_IN) {//login con google
+            prueba = preferencias.getString("nombre", "no se obtuvo");
+            Toast.makeText(getApplicationContext(), prueba, Toast.LENGTH_SHORT).show();
+            correoR = preferencias.getString("correo", "no se obtivo");
+            contraseñaR = preferencias.getString("contraseña", "no se obtivo");
+            nombreR = preferencias.getString("nombre", "no se obtivo");
+        } else if (requestCode == RC_SIGN_IN) {//login con google
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
-        }
-        else {
+        } else {
             //facebook
-            callbackManager.onActivityResult(requestCode,resultCode,data);
+            callbackManager.onActivityResult(requestCode, resultCode, data);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -219,43 +230,111 @@ public class LoginActivity extends AppCompatActivity {
         //google
         if (result.isSuccess()) {
             GoogleSignInAccount acct = result.getSignInAccount();
-            correoR=acct.getEmail();//obtener email
-            nombreR=acct.getDisplayName();
-            urifoto=acct.getPhotoUrl();
-            log="google";
-            silog=1;
+            correoR = acct.getEmail();//obtener email
+            nombreR = acct.getDisplayName();
+            urifoto = acct.getPhotoUrl();
+            log = "google";
+            silog = 1;
 
 
-            if ((urifoto==null))
-                foto=null;
+            //Firebase
+            database = FirebaseDatabase.getInstance();
+            myRef = database.getReference("Contadores");
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-            else
-                foto=urifoto.toString();
+                    id = dataSnapshot.child("contador").getValue().toString();
+                    Toast.makeText(getApplicationContext(),id, Toast.LENGTH_SHORT).show();
 
-            guardarPreferencias(silog,correoR,nombreR,foto,log);
-            prueba=preferencias.getString("nombre","noseobtuvo");
-            Toast.makeText(getApplicationContext(),prueba, Toast.LENGTH_SHORT).show();
+                    if(id.equals("0")){
+                        numerito=-1;
+                    }else{
+                        final int contadora=Integer.parseInt(id);
+                        myRef = database.getReference("Puntaje4imagenes");
+                        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for(int i=0;i<contadora;i++){
+
+                                    String correofirebase=dataSnapshot.child("user"+String.valueOf(i)).child("correo").getValue().toString();
+
+                                    if(correofirebase.equals(correoR)){
+                                        Toast.makeText(getApplicationContext(),"existe", Toast.LENGTH_SHORT).show();
+                                        numerito=i;
+                                        break;
+                                    }
+                                    else {
+                                        numerito=-1;
+                                        Toast.makeText(getApplicationContext(),"No existe", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                if(numerito==-1){
+                                    //Si el usuario no existe lo agrego a la base de datos
+                                    contador4imagenes = Integer.parseInt(id);
+                                    Toast.makeText(getApplicationContext(),"user"+id, Toast.LENGTH_SHORT).show();
+
+                                    //Añadir un un usuario
+                                    myRef = database.getReference("Puntaje4imagenes").child("user" + id);
+                                    jugador = new Jugador("user" + id, correoR, nombreR, punaje4imagenes);
+                                    myRef.setValue(jugador);
+                                    editor_preferencias.putString("usuario","user"+id);
+                                    contador4imagenes++;
+                                    myRef = database.getReference("Contadores").child("contador");
+                                    myRef.setValue(contador4imagenes);
+
+                                }else{
+                                    //Si el usuario existe solo almaceno su numero de usuario en preferencias
+                                    editor_preferencias.putString("usuario","user"+numerito);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+
+
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+
+
+            if ((urifoto == null)) {
+                foto = null;
+            } else {
+                foto = urifoto.toString();
+            }
+
+            guardarPreferencias(silog, correoR, nombreR, foto, log);
             Intent intent = new Intent(LoginActivity.this, PrincipalActivity.class);
             startActivity(intent);
             finish();
 
         } else {
             // Signed out, show unauthenticated UI.
-            Toast.makeText(getApplicationContext(),"Error en el loggin",Toast.LENGTH_SHORT);
+            Toast.makeText(getApplicationContext(), "Verifique su conexión", Toast.LENGTH_SHORT);
         }
     }
 
+
     public void Registrarse(View view) {
         Intent intent = new Intent(LoginActivity.this, RegistroActivity.class);
-        startActivityForResult(intent,1234);
+        startActivityForResult(intent, 1234);
     }
+
     private void signIn() {
 
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    public void generarHash(){
+    public void generarHash() {
 
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
@@ -268,16 +347,17 @@ public class LoginActivity extends AppCompatActivity {
             }
         } catch (PackageManager.NameNotFoundException e) {
 
-        } catch (NoSuchAlgorithmException e) {}
+        } catch (NoSuchAlgorithmException e) {
+        }
 
     }
 
-    void guardarPreferencias(int silog,String correo,String nombre, String foto,String log){
-        editor_preferencias.putInt("silog",silog);
-        editor_preferencias.putString("correo",correo);
-        editor_preferencias.putString("nombre",nombre);
-        editor_preferencias.putString("foto",foto);
-        editor_preferencias.putString("log",log);
+    void guardarPreferencias(int silog, String correo, String nombre, String foto, String log) {
+        editor_preferencias.putInt("silog", silog);
+        editor_preferencias.putString("correo", correo);
+        editor_preferencias.putString("nombre", nombre);
+        editor_preferencias.putString("foto", foto);
+        editor_preferencias.putString("log", log);
         editor_preferencias.commit();
     }
 

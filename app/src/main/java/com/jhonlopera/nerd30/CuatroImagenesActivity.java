@@ -2,16 +2,14 @@ package com.jhonlopera.nerd30;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.Layout;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,7 +49,7 @@ public class CuatroImagenesActivity extends AppCompatActivity implements View.On
 
         tiempo=(Chronometer) findViewById(R.id.tiempo);
         score=(TextView) findViewById(R.id.tscore);
-        puntaje=preferencias.getLong("puntaje",1);
+        puntaje=preferencias.getLong("puntaje4imagenes",0);
         //puntaje=0;
         score.setText("Score: "+ String.valueOf(puntaje));
 
@@ -96,9 +94,6 @@ public class CuatroImagenesActivity extends AppCompatActivity implements View.On
             botones[i].setOnClickListener(this);
         }
 
-
-
-
     }
 
     @Override
@@ -129,7 +124,7 @@ public class CuatroImagenesActivity extends AppCompatActivity implements View.On
                 }
 
 
-                editor_preferencias.putLong("puntaje",puntaje).commit();
+                editor_preferencias.putLong("puntaje4imagenes",puntaje).commit();
                 score.setText("Score: "+String.valueOf(puntaje));
                 Toast.makeText(this,"GOOD!",Toast.LENGTH_SHORT).show();
 
@@ -145,7 +140,7 @@ public class CuatroImagenesActivity extends AppCompatActivity implements View.On
                     level=1;
                     puntaje=0;
                     editor_preferencias.putInt("level",level).commit();
-                    editor_preferencias.putLong("puntaje",puntaje).commit();
+                    editor_preferencias.putLong("puntaje4imagenes",puntaje).commit();
                     score.setText("Score: " +puntaje);
                 }else{
                     level++;
