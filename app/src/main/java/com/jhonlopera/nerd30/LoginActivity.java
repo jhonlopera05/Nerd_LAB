@@ -245,7 +245,6 @@ public class LoginActivity extends AppCompatActivity {
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                     id = dataSnapshot.child("contador").getValue().toString();
-                    Toast.makeText(getApplicationContext(),id, Toast.LENGTH_SHORT).show();
 
                     if(id.equals("0")){
                         numerito=-1;
@@ -260,21 +259,19 @@ public class LoginActivity extends AppCompatActivity {
                                     String correofirebase=dataSnapshot.child("user"+String.valueOf(i)).child("correo").getValue().toString();
 
                                     if(correofirebase.equals(correoR)){
-                                        Toast.makeText(getApplicationContext(),"existe", Toast.LENGTH_SHORT).show();
                                         numerito=i;
                                         break;
                                     }
                                     else {
                                         numerito=-1;
-                                        Toast.makeText(getApplicationContext(),"No existe", Toast.LENGTH_SHORT).show();
+
                                     }
                                 }
 
                                 if(numerito==-1){
                                     //Si el usuario no existe lo agrego a la base de datos
+                                    Toast.makeText(getApplicationContext(),"Se creado el nuevo usuario", Toast.LENGTH_SHORT).show();
                                     contador4imagenes = Integer.parseInt(id);
-                                    Toast.makeText(getApplicationContext(),"user"+id, Toast.LENGTH_SHORT).show();
-
                                     //Añadir un un usuario
                                     myRef = database.getReference("Puntaje4imagenes").child("user" + id);
                                     jugador = new Jugador("user" + id, correoR, nombreR, punaje4imagenes);
@@ -286,6 +283,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 }else{
                                     //Si el usuario existe solo almaceno su numero de usuario en preferencias
+                                    Toast.makeText(getApplicationContext(),"Este usuario ya existe", Toast.LENGTH_SHORT).show();
                                     editor_preferencias.putString("usuario","user"+numerito);
                                 }
                             }
@@ -296,8 +294,6 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         });
                     }
-
-
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
