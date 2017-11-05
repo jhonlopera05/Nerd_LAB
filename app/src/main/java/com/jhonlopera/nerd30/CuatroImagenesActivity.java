@@ -125,6 +125,7 @@ public class CuatroImagenesActivity extends AppCompatActivity implements View.On
 
 
                 editor_preferencias.putLong("puntaje4imagenes",puntaje).commit();
+
                 score.setText("Score: "+String.valueOf(puntaje));
                 Toast.makeText(this,"GOOD!",Toast.LENGTH_SHORT).show();
 

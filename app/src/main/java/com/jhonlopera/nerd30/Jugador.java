@@ -6,24 +6,31 @@ package com.jhonlopera.nerd30;
 
 public class Jugador {
     private String id, correo, nombre;
-    private long puntaje;
+    private long puntaje4imagenes,puntajeConcentrese,puntajeTopo;
 
-    public Jugador() {
+    public long getPuntajeConcentrese() {
+        return puntajeConcentrese;
     }
 
-    public Jugador(String id, String correo, String nombre,long puntaje) {
+    public void setPuntajeConcentrese(long puntajeConcentrese) {
+        this.puntajeConcentrese = puntajeConcentrese;
+    }
+
+    public long getPuntajeTopo() {
+        return puntajeTopo;
+    }
+
+    public void setPuntajeTopo(long puntajeTopo) {
+        this.puntajeTopo = puntajeTopo;
+    }
+
+    public Jugador(String id, String correo, String nombre, long puntaje4imagenes, long puntajeConcentrese, long puntajeTopo) {
         this.id = id;
         this.correo = correo;
         this.nombre = nombre;
-        this.puntaje=puntaje;
-    }
-
-    public long getPuntaje() {
-        return puntaje;
-    }
-
-    public void setPuntaje(long puntaje) {
-        this.puntaje = puntaje;
+        this.puntaje4imagenes = puntaje4imagenes;
+        this.puntajeConcentrese = puntajeConcentrese;
+        this.puntajeTopo = puntajeTopo;
     }
 
     public String getId() {
@@ -48,5 +55,13 @@ public class Jugador {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public long getPuntaje4imagenes() {
+        return puntaje4imagenes;
+    }
+
+    public void setPuntaje4imagenes(long puntaje4imagenes) {
+        this.puntaje4imagenes = puntaje4imagenes;
     }
 }

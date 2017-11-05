@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
     DatabaseReference myRef;
     FirebaseDatabase database;
     ValueEventListener listener;
-    long punaje4imagenes;
+    long punaje4imagenes,puntajeConcentrese,puntajeTopo;
 
 
     @Override
@@ -81,7 +81,10 @@ public class LoginActivity extends AppCompatActivity {
         preferencias = getSharedPreferences("Preferencias", Context.MODE_PRIVATE);
         //se declara instancia el editor de "Preferencias"
         editor_preferencias = preferencias.edit();
+        //Cargar puntajes
         punaje4imagenes = preferencias.getLong("puntaje4imagenes",0);
+        puntajeConcentrese=preferencias.getLong("puntajeConcentrese",0);
+        puntajeTopo=preferencias.getLong("puntajeTopo",0);
 
         //-------------------------------------------------------
         //Si el logggin es con el registro de usuario
@@ -246,11 +249,25 @@ public class LoginActivity extends AppCompatActivity {
 
                     id = dataSnapshot.child("contador").getValue().toString();
 
-                    if(id.equals("0")){
-                        numerito=-1;
-                    }else{
+                    if(id.equals("0")){// Si no hay ningun usuario simplemente se agrega
+                        //Si el usuario no existe lo agrego a la base de datos
+                        Toast.makeText(getApplicationContext(),"Se creado un nuevo usuario", Toast.LENGTH_SHORT).show();
+                        contador4imagenes = Integer.parseInt(id);
+                        //Añadir un un usuario
+                        myRef = database.getReference("DatosDeUsuario").child("user" + id);
+                        jugador = new Jugador("user" + id, correoR, nombreR, punaje4imagenes,puntajeConcentrese,puntajeTopo);
+                        myRef.setValue(jugador);
+
+                        editor_preferencias.putString("usuario","user"+id);//Guardo el id del jugador en preferencias
+
+                        //Actualizo el numero de usuarios en la base de datos
+                        contador4imagenes++;
+                        myRef = database.getReference("Contadores").child("contador");
+                        myRef.setValue(contador4imagenes);
+
+                    }else{ //Se comprueba si ya existe el correo
                         final int contadora=Integer.parseInt(id);
-                        myRef = database.getReference("Puntaje4imagenes");
+                        myRef = database.getReference("DatosDeUsuario");
                         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -263,20 +280,23 @@ public class LoginActivity extends AppCompatActivity {
                                         break;
                                     }
                                     else {
-                                        numerito=-1;
+                                        numerito=-1; //-1 cuando el usuario no existe
 
                                     }
                                 }
 
                                 if(numerito==-1){
                                     //Si el usuario no existe lo agrego a la base de datos
-                                    Toast.makeText(getApplicationContext(),"Se creado el nuevo usuario", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(),"Se creado un nuevo usuario", Toast.LENGTH_SHORT).show();
                                     contador4imagenes = Integer.parseInt(id);
                                     //Añadir un un usuario
-                                    myRef = database.getReference("Puntaje4imagenes").child("user" + id);
-                                    jugador = new Jugador("user" + id, correoR, nombreR, punaje4imagenes);
+                                    myRef = database.getReference("DatosDeUsuario").child("user" + id);
+                                    jugador = new Jugador("user" + id, correoR, nombreR, punaje4imagenes,puntajeConcentrese,puntajeTopo);
                                     myRef.setValue(jugador);
-                                    editor_preferencias.putString("usuario","user"+id);
+
+                                    editor_preferencias.putString("usuario","user"+id);//Guardo el id del jugador en preferencias
+
+                                    //Actualizo el numero de usuarios en la base de datos
                                     contador4imagenes++;
                                     myRef = database.getReference("Contadores").child("contador");
                                     myRef.setValue(contador4imagenes);
