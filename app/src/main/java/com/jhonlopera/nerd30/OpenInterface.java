@@ -10,4 +10,6 @@ public interface OpenInterface {
     void OpenConcentreseMenu();
     void OpenTopoMenu();
     void OpenCuantroImagenes();
+    void cambiarnombre(String nuevonombre);
+    void eliminardatos();
 }

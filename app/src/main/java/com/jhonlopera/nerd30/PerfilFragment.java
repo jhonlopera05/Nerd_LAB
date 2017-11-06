@@ -1,15 +1,7 @@
 package com.jhonlopera.nerd30;
 
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,14 +10,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.support.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
-import com.squareup.picasso.Picasso;
-
-import org.json.JSONException;
 
 
 public class PerfilFragment extends Fragment implements View.OnClickListener {
@@ -117,6 +103,9 @@ public class PerfilFragment extends Fragment implements View.OnClickListener {
         }
         else if(counter==6){
             Toast.makeText(getActivity(),"¿No te cansas?",Toast.LENGTH_LONG).show();
+        }
+        else if(counter==7){
+            Toast.makeText(getActivity(),"¿Cual es tu problema?",Toast.LENGTH_LONG).show();
         }
 
     }

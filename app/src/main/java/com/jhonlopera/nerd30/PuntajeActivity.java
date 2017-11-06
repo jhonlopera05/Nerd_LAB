@@ -1,21 +1,21 @@
 package com.jhonlopera.nerd30;
 
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
-import android.view.MenuItem;
-
 import android.widget.FrameLayout;
 
 public class PuntajeActivity extends PrincipalActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+    private FragmentManager fm;
+    private FragmentTransaction ft;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,25 +25,20 @@ public class PuntajeActivity extends PrincipalActivity implements NavigationView
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.frameprincipal);
         getLayoutInflater().inflate(R.layout.activity_puntajes, contentFrameLayout);
 
-        ft.remove(fragment1); //se remueve el fragment que se inicia por defecto en el oncreate de principal
+
         getSupportActionBar().setTitle("Puntajes");
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        fm = getSupportFragmentManager();
+        ft = fm.beginTransaction();
+        ft.remove(fragment1).commit(); //se remueve el fragment que se inicia por defecto en el oncreate de principal
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
-        return super.onOptionsItemSelected(item);
-    }
 
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {

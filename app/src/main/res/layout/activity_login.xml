@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -49,7 +49,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:layout_gravity="center">
 
             <Button
@@ -60,17 +60,16 @@
                 android:onClick="iniciar"
                 android:text="@string/Iniciar"
                 android:textColor="@color/black"
-                android:textSize="22sp" />
+                android:textSize="20sp"
+                android:layout_marginRight="20sp"
+                android:layout_marginLeft="20sp"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/black"></LinearLayout>
 
 
 
-        <LinearLayout
+
+        <!--LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -84,17 +83,21 @@
                 android:layout_weight="1"
                 android:layout_gravity="center_horizontal"
                 android:textSize="22sp"/>
-        </LinearLayout>
+        </LinearLayout-->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
+
+            android:layout_marginBottom="10dp"
             android:layout_weight="1">
 
             <com.google.android.gms.common.SignInButton
                 android:id="@+id/sign_in_button"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_marginLeft="25sp"
+                android:layout_marginRight="25sp"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -107,8 +110,9 @@
                 android:textSize="22sp"
                 android:gravity="center"
                 android:textStyle="bold"
-                android:textColor="@color/white"
-                android:onClick="Registrarse"/>
+                android:textColor="@color/black"
+                android:onClick="Registrarse"
+                android:background="@color/opacitwhite"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

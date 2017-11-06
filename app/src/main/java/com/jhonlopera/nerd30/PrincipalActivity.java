@@ -3,14 +3,12 @@ package com.jhonlopera.nerd30;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,33 +16,36 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class PrincipalActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OpenInterface{
 
-    FragmentManager fm;
-    FragmentTransaction ft;
+   private FragmentManager fm;
+    private FragmentTransaction ft;
+    DatabaseReference myRef;
+    FirebaseDatabase database;
 
-    private  String correoR,contraseñaR,nombreR,log,foto,fotoR;
+    private  String correoR,nombreR,log,foto;
     private ImageView Foto_perfil_Header;
     private TextView tvnombre;
-    private Uri urifoto;
-    int duration = Toast.LENGTH_SHORT;
 
-    private ImageButton puntaje;
+
     GoogleApiClient mGoogleApiClient;
     SharedPreferences preferencias;
     SharedPreferences.Editor editor_preferencias;
@@ -148,8 +149,9 @@ public class PrincipalActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_config) {
 
-            //Log.i("NavDraw","Sección Configuración");
-            //getSupportActionBar().setTitle("Configuración");
+            fragment=new ConfiguracionFragment();
+            FragmentTransaction =true;
+
 
         }  else if (id == R.id.nav_cerrarsesion){
             silog=0;
@@ -157,14 +159,7 @@ public class PrincipalActivity extends AppCompatActivity
             editor_preferencias.commit();
 
             log=preferencias.getString("log","error");
-            if(log.equals("facebook")){
-                intent=new Intent(this,LoginActivity.class);
-                LoginManager.getInstance().logOut();// cerrar sesion en facebook
-                Toast.makeText(getApplicationContext(),"Saliendo de facebook", Toast.LENGTH_SHORT).show();
-                startActivity(intent);
-                finish();
-            }
-            else if(log.equals("google")){
+            if(log.equals("google")){
                 signOut(); //cerrar sesion en google
                 intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
@@ -189,6 +184,7 @@ public class PrincipalActivity extends AppCompatActivity
             fragment = new MenuTopoFragment();
             FragmentTransaction = true;
         }
+
 
         if(FragmentTransaction){
             getSupportFragmentManager().beginTransaction().replace(R.id.frameprincipal,fragment).commit();
@@ -268,6 +264,25 @@ public class PrincipalActivity extends AppCompatActivity
         Intent intent=new Intent(this,CuatroImagenesActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void cambiarnombre(String nuevonombre) {
+        String usuariojuego=preferencias.getString("usuario"," ");
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("DatosDeUsuario").child(usuariojuego);
+        Map<String, Object> newData = new HashMap<>();
+        newData.put("nombre", nuevonombre);
+        myRef.updateChildren(newData);
+        editor_preferencias.putString("nombre",nuevonombre).commit();
+        modificarbanner();
+
+
+    }
+
+    @Override
+    public void eliminardatos() {
+
     }
 }
 

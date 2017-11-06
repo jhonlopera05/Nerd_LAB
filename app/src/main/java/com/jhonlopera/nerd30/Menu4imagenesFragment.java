@@ -2,7 +2,6 @@ package com.jhonlopera.nerd30;
 
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -32,10 +31,7 @@ public class Menu4imagenesFragment extends Fragment implements View.OnClickListe
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
         openInterface =(OpenInterface) activity;
-
-
     }
 
     @Override

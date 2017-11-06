@@ -2,7 +2,7 @@
     <string name="app_name">Nerd 3.0</string>
     <string name="correo">Correo</string>
     <string name="contraseña">Contraseña</string>
-    <string name="Iniciar">Iniciar</string>
+    <string name="Iniciar">Iniciar con datos de registro</string>
     <string name="registrese">Registrese</string>
     <string name="repcontraseña">Repetir contraseña</string>
     <string name="registrarse">Registrarse</string>
@@ -31,5 +31,10 @@
     <string name="Concentrese">Concéntrese</string>
     <string name="Tiempo">Tiempo: </string>
     <string name="Score">Score: </string>
+    <string name="nombreperfil"> Escriba aquí el nuevo nombre</string>
+    <string name="avisoeliminar">Se eliminara su cuenta de usuario y se perderan todos los datos</string>
+    <string name="cambio">Confirmar cambio</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="cambiarnombreperfil">Cambiar nombre perfil</string>
 
 </resources>

@@ -17,13 +17,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -37,9 +31,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -77,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         econtraseña = (EditText) findViewById(R.id.eContraseña);
 
 
+
         // Se define el archivo "Preferencias" donde se almacenaran los valores de las preferencias
         preferencias = getSharedPreferences("Preferencias", Context.MODE_PRIVATE);
         //se declara instancia el editor de "Preferencias"
@@ -98,6 +90,8 @@ public class LoginActivity extends AppCompatActivity {
         }
         //--------------------------------------------------------------------
 
+        //Login con facebook
+        /*
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions("public_profile"); //Permisos del perfil publico
         callbackManager = CallbackManager.Factory.create();
@@ -160,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Error en el login", Toast.LENGTH_SHORT).show();
             }
         });
-
+*/
         //Para loggin con google
         //-------------------------------------------------------------------------------------------
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
@@ -169,7 +163,7 @@ public class LoginActivity extends AppCompatActivity {
         mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
             @Override
             public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                Toast.makeText(getApplicationContext(), "Error en el loggin", Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(), "Error en el loggin", Toast.LENGTH_SHORT).show();
             }
         }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
 
@@ -294,7 +288,7 @@ public class LoginActivity extends AppCompatActivity {
                                     jugador = new Jugador("user" + id, correoR, nombreR, punaje4imagenes,puntajeConcentrese,puntajeTopo);
                                     myRef.setValue(jugador);
 
-                                    editor_preferencias.putString("usuario","user"+id);//Guardo el id del jugador en preferencias
+                                    editor_preferencias.putString("usuario","user"+id).commit();//Guardo el id del jugador en preferencias
 
                                     //Actualizo el numero de usuarios en la base de datos
                                     contador4imagenes++;
@@ -303,8 +297,9 @@ public class LoginActivity extends AppCompatActivity {
 
                                 }else{
                                     //Si el usuario existe solo almaceno su numero de usuario en preferencias
+                                    editor_preferencias.putString("usuario","user"+String.valueOf(numerito)).commit();
                                     Toast.makeText(getApplicationContext(),"Este usuario ya existe", Toast.LENGTH_SHORT).show();
-                                    editor_preferencias.putString("usuario","user"+numerito);
+
                                 }
                             }
 
@@ -334,7 +329,7 @@ public class LoginActivity extends AppCompatActivity {
 
         } else {
             // Signed out, show unauthenticated UI.
-            Toast.makeText(getApplicationContext(), "Verifique su conexión", Toast.LENGTH_SHORT);
+            Toast.makeText(getApplicationContext(), "Verifique su conexión", Toast.LENGTH_SHORT).show();
         }
     }
 
