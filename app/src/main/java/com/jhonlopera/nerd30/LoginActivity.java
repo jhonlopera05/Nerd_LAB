@@ -233,6 +233,11 @@ public class LoginActivity extends AppCompatActivity {
             log = "google";
             silog = 1;
 
+            if ((urifoto == null)) {
+                foto = null;
+            } else {
+                foto = urifoto.toString();
+            }
 
             //Firebase
             database = FirebaseDatabase.getInstance();
@@ -243,8 +248,9 @@ public class LoginActivity extends AppCompatActivity {
 
                     id = dataSnapshot.child("contador").getValue().toString();
 
-                    if(id.equals("0")){// Si no hay ningun usuario simplemente se agrega
-                        //Si el usuario no existe lo agrego a la base de datos
+                    if(id.equals("0")){// Si no hay ningun usuario en la base de datos simplemente se agrega
+
+
                         Toast.makeText(getApplicationContext(),"Se creado un nuevo usuario", Toast.LENGTH_SHORT).show();
                         contador4imagenes = Integer.parseInt(id);
                         //Añadir un un usuario
@@ -252,12 +258,14 @@ public class LoginActivity extends AppCompatActivity {
                         jugador = new Jugador("user" + id, correoR, nombreR, punaje4imagenes,puntajeConcentrese,puntajeTopo);
                         myRef.setValue(jugador);
 
-                        editor_preferencias.putString("usuario","user"+id);//Guardo el id del jugador en preferencias
+                        //Guardo el id del jugador en preferencias
+                        editor_preferencias.putString("usuario","user"+id);
 
                         //Actualizo el numero de usuarios en la base de datos
                         contador4imagenes++;
                         myRef = database.getReference("Contadores").child("contador");
                         myRef.setValue(contador4imagenes);
+                        guardarPreferencias(silog, correoR, nombreR, foto, log);
 
                     }else{ //Se comprueba si ya existe el correo
                         final int contadora=Integer.parseInt(id);
@@ -268,9 +276,22 @@ public class LoginActivity extends AppCompatActivity {
                                 for(int i=0;i<contadora;i++){
 
                                     String correofirebase=dataSnapshot.child("user"+String.valueOf(i)).child("correo").getValue().toString();
+                                    if(correofirebase.equals(" ")){
+                                        //Añadir un un usuario
+                                        myRef = database.getReference("DatosDeUsuario").child("user" + String.valueOf(i));
+                                        jugador = new Jugador("user" + String.valueOf(i), correoR, nombreR, punaje4imagenes,puntajeConcentrese,puntajeTopo);
+                                        myRef.setValue(jugador);
+                                        editor_preferencias.putString("usuario","user"+String.valueOf(i)).commit();//Guardo el id del jugador en preferencias
+                                        guardarPreferencias(silog, correoR, nombreR, foto, log);
+                                        break;
 
-                                    if(correofirebase.equals(correoR)){
+                                    }
+
+                                    else if(correofirebase.equals(correoR)){
                                         numerito=i;
+                                        // Se almacena el nombre ya que se puedo haber cambiado
+                                        nombreR=dataSnapshot.child("user"+String.valueOf(i)).child("nombre").getValue().toString();
+
                                         break;
                                     }
                                     else {
@@ -287,19 +308,20 @@ public class LoginActivity extends AppCompatActivity {
                                     myRef = database.getReference("DatosDeUsuario").child("user" + id);
                                     jugador = new Jugador("user" + id, correoR, nombreR, punaje4imagenes,puntajeConcentrese,puntajeTopo);
                                     myRef.setValue(jugador);
-
                                     editor_preferencias.putString("usuario","user"+id).commit();//Guardo el id del jugador en preferencias
-
                                     //Actualizo el numero de usuarios en la base de datos
                                     contador4imagenes++;
                                     myRef = database.getReference("Contadores").child("contador");
                                     myRef.setValue(contador4imagenes);
+                                    guardarPreferencias(silog, correoR, nombreR, foto, log);
+
+
 
                                 }else{
-                                    //Si el usuario existe solo almaceno su numero de usuario en preferencias
+                                    //Almaceno los datos en preferencias para cargarlos en el peril
+                                    guardarPreferencias(silog, correoR, nombreR, foto, log);
                                     editor_preferencias.putString("usuario","user"+String.valueOf(numerito)).commit();
                                     Toast.makeText(getApplicationContext(),"Este usuario ya existe", Toast.LENGTH_SHORT).show();
-
                                 }
                             }
 
@@ -315,14 +337,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
 
-
-            if ((urifoto == null)) {
-                foto = null;
-            } else {
-                foto = urifoto.toString();
-            }
-
-            guardarPreferencias(silog, correoR, nombreR, foto, log);
             Intent intent = new Intent(LoginActivity.this, PrincipalActivity.class);
             startActivity(intent);
             finish();

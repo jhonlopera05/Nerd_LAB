@@ -283,6 +283,18 @@ public class PrincipalActivity extends AppCompatActivity
     @Override
     public void eliminardatos() {
 
+        String usuariojuego=preferencias.getString("usuario"," ");
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("DatosDeUsuario").child(usuariojuego);
+        Map<String, Object> newData = new HashMap<>();
+        newData.put("nombre", " ");
+        newData.put("correo"," ");
+        newData.put("puntaje4imagenes",0);
+        newData.put("puntajeConcentrese",0);
+        newData.put("puntajeTopo",0);
+        myRef.updateChildren(newData);
+
+
     }
 }
 

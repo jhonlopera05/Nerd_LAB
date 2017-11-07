@@ -17,7 +17,7 @@ public class ConfiguracionFragment extends Fragment implements View.OnClickListe
     private LinearLayout editarnombre,lineareliminarc;
     OpenInterface openInterface;
     private EditText nuevonombre;
-    Button confirmar,cambiarnombre,eliminar,cancelar;
+    Button confirmar,cambiarnombre,eliminar,cancelar,confirmareliminar;
     private String nombre;
     public ConfiguracionFragment() {
         // Required empty public constructor
@@ -39,11 +39,13 @@ public class ConfiguracionFragment extends Fragment implements View.OnClickListe
         eliminar=(Button) view.findViewById(R.id.beliminar);
         cancelar=(Button) view.findViewById(R.id.btcancelar);
         lineareliminarc=(LinearLayout) view.findViewById(R.id.lineareliminar);
+        confirmareliminar=(Button) view.findViewById(R.id.bconfirmareliminar);
 
         confirmar.setOnClickListener(this);
         cambiarnombre.setOnClickListener(this);
         eliminar.setOnClickListener(this);
         cancelar.setOnClickListener(this);
+        confirmareliminar.setOnClickListener(this);
         return view;
     }
     @Override
@@ -80,6 +82,11 @@ public class ConfiguracionFragment extends Fragment implements View.OnClickListe
         }if(v==eliminar){
             editarnombre.setVisibility(View.GONE);
             lineareliminarc.setVisibility(View.VISIBLE);
+
+        }if(v==confirmareliminar){
+            lineareliminarc.setVisibility(View.GONE);
+            openInterface.eliminardatos();
+            Toast.makeText(getContext(),"Usuario eliminado",Toast.LENGTH_SHORT).show();
 
         }
 
