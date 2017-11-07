@@ -33,6 +33,9 @@ public class Jugador {
         this.puntajeTopo = puntajeTopo;
     }
 
+    public Jugador() {
+    }
+
     public String getId() {
         return id;
     }
